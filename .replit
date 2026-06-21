@@ -1,0 +1,44 @@
+modules = ["nodejs-20", "web"]
+[agent]
+expertMode = true
+integrations = ["replitmail:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node server.js"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["node", "server.js"]
+
+[userenv]
+
+[userenv.shared]
+JWT_SECRET = "c6b197d608598e19b293b204bf9d54588e7f7feed775c7637cbad4348ddefe4ff757e65706208a1d7dad4e5cbc11e098"
